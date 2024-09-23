@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Clipboard;
+import java.awt.Toolkit;
+
 public class MainForm extends JDialog {
 
     //region Graphic code components and start app
@@ -16,6 +20,8 @@ public class MainForm extends JDialog {
     private JTextArea textHistory;
     private JTextArea textCurrent;
     private JButton btnStop;
+    private JButton btnDelete;
+    private JButton btnCopy;
 
     SpeechAnalysisServices serviceAnalysis;
 
@@ -42,6 +48,20 @@ public class MainForm extends JDialog {
         btnExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onExit();
+            }
+        });
+
+        btnCopy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                copyToClipboard();
+            }
+        });
+
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearTextHistory();
             }
         });
 
@@ -150,5 +170,22 @@ public class MainForm extends JDialog {
     private void onExit() {
         dispose();
     }
+
+    // Method to copy textHistory content to clipboard
+    private void copyToClipboard() {
+        String textToCopy = textHistory.getText();
+        if (!textToCopy.isEmpty()) {
+            StringSelection stringSelection = new StringSelection(textToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    // Method to clear the content of textHistory
+    private void clearTextHistory() {
+        textHistory.setText("");
+    }
+
     //endregion
+
 }
